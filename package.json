@@ -1,0 +1,35 @@
+{
+  "name": "mock-mocha",
+  "version": "0.0.1",
+  "description": "To mock mocha in your test when you test your mocha tests",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha",
+    "coverage": "istanbul cover --include-all-sources ./node_modules/mocha/bin/_mocha -v --root ./lib --report lcovonly",
+    "travis": "istanbul cover --include-all-sources ./node_modules/mocha/bin/_mocha -v --root ./lib --report lcovonly -- -R spec && cat ./coverage/lcov.info | node ./node_modules/coveralls/bin/coveralls.js && rm -rf ./coverage"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/szikszail/mock-mocha.git"
+  },
+  "keywords": [
+    "mocha",
+    "mock"
+  ],
+  "author": "Laszlo Szikszai <sziklaszlo@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/szikszail/mock-mocha/issues"
+  },
+  "engines": {
+    "node": ">=4.4.2",
+    "npm": "~2.14.7"
+  },
+  "homepage": "https://github.com/szikszail/date-x#readme",
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "coveralls": "^2.11.9",
+    "istanbul": "^0.4.3",
+    "mocha": "^2.4.5"
+  }
+}
