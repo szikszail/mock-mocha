@@ -132,7 +132,7 @@ describe("testing my mocha tests", () => {
 
 ### Types
 
-- #### `Describe` - test suite
+#### `Describe` - test suite
   
   **Properties**:
     - `description {String}`
@@ -142,7 +142,7 @@ describe("testing my mocha tests", () => {
   **Methods**:
     - `execute() : void` - executes `test`, which is a **sync** function
 
-- #### `It` - test
+#### `It` - test
 
   **Properties**:
     - `description {String}`
@@ -152,7 +152,7 @@ describe("testing my mocha tests", () => {
   **Methods**:
     - `execute() : Promise` - executes `test`, which could be both **sync** and **async**
 
-- #### `Before`, `BeforeEach`, `AfterEach`, `After` - hooks
+#### `Before`, `BeforeEach`, `AfterEach`, `After` - hooks
 
   **Properties**:
     - `description {String}`
