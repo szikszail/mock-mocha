@@ -897,4 +897,13 @@ describe("API", () => {
 
         });
     });
+
+    describe("Require", () => {
+        it("should not use cache when requiring a module", () => {
+            const firstDate = API.require(__dirname, './require-test.js');
+            const secondDate = API.require(__dirname, './require-test.js');
+
+            expect(firstDate).to.not.equal(secondDate);
+        });
+    });
 });
