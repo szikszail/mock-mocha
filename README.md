@@ -130,6 +130,40 @@ describe("testing my mocha tests", () => {
 
   **Returns**: `{Object}`
 
+### Types
+
+- #### `Describe` - test suite
+  
+  **Properties**:
+    - `description {String}`
+    - `test {Function}`
+    - `type {STATUS|Number}`
+
+  **Methods**:
+    - `execute() : void` - executes `test`, which is a **sync** function
+
+- #### `It` - test
+
+  **Properties**:
+    - `description {String}`
+    - `test {Function}`
+    - `type{STATUS|Number}`
+
+  **Methods**:
+    - `execute() : Promise` - executes `test`, which could be both **sync** and **async**
+
+- #### `Before`, `BeforeEach`, `AfterEach`, `After` - hooks
+
+  **Properties**:
+    - `description {String}`
+    - `test {Function}`
+    - `type{STATUS|Number}`
+
+  **Methods**:
+    - `execute() : Promise` - executes `test`, which could be both **sync** and **async**
+
+**Note**: In case of `It` and all hooks, during execution the executed test/hook can call `this.skip()` as it could be done in Mocha. In this case `type` of the given `It`/hooks will change to `SKIP`.
+
 ### Mock Mocha methods
 
 The mocked mocha methods are:
