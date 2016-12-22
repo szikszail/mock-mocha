@@ -41,7 +41,7 @@ describe("API", () => {
         });
 
         describe("running", () => {
-            const createSuite = fn => new API.Describe(API.STATUS.OK, suiteName, fn);
+            const createSuite = fn => new API.Describe(suiteName, fn);
 
             it("should have method to execute defined suite", () => {
                 let called = false;
@@ -62,7 +62,7 @@ describe("API", () => {
                 const suite = createSuite(test);
                 suite.execute();
                 expect(called).to.be.true;
-                expect(suite.type).to.equal(API.STATUS.SKIP);
+                expect(suite.status).to.equal(API.STATUS.SKIP);
             });
         });
 
@@ -76,7 +76,7 @@ describe("API", () => {
 
                 const registeredSuite = API.describes[0];
                 expect(registeredSuite).to.be.an.instanceof(API.Describe);
-                expect(registeredSuite.type).to.equal(API.STATUS.OK);
+                expect(registeredSuite.status).to.equal(API.STATUS.OK);
                 expect(registeredSuite.description).to.equal(suiteName);
                 expect(registeredSuite.test).to.equal(testSuite);
             });
@@ -88,7 +88,7 @@ describe("API", () => {
 
                 const registeredSuite = API.describes[0];
                 expect(registeredSuite).to.be.an.instanceof(API.Describe);
-                expect(registeredSuite.type).to.equal(API.STATUS.SKIP);
+                expect(registeredSuite.status).to.equal(API.STATUS.SKIP);
                 expect(registeredSuite.description).to.equal(suiteName);
                 expect(registeredSuite.test).to.equal(testSuite);
             });
@@ -100,7 +100,7 @@ describe("API", () => {
 
                 const registeredSuite = API.describes[0];
                 expect(registeredSuite).to.be.an.instanceof(API.Describe);
-                expect(registeredSuite.type).to.equal(API.STATUS.ONLY);
+                expect(registeredSuite.status).to.equal(API.STATUS.ONLY);
                 expect(registeredSuite.description).to.equal(suiteName);
                 expect(registeredSuite.test).to.equal(testSuite);
             });
@@ -123,7 +123,7 @@ describe("API", () => {
         });
 
         describe("running", () => {
-            const createTest = fn => new API.It(API.STATUS.OK, testName, fn);
+            const createTest = fn => new API.It(testName, fn);
 
             it("should work with passed sync tests", done => {
                 let called = false;
@@ -225,7 +225,7 @@ describe("API", () => {
                 test.execute().then(r => {
                     expect(r).to.be.undefined;
                     expect(called).to.be.true;
-                    expect(test.type).to.equal(API.STATUS.SKIP);
+                    expect(test.status).to.equal(API.STATUS.SKIP);
                 }, fail).then(done, done);
             });
         });
@@ -240,7 +240,7 @@ describe("API", () => {
 
                 const registeredTest = API.its[0];
                 expect(registeredTest).to.be.an.instanceof(API.It);
-                expect(registeredTest.type).to.equal(API.STATUS.OK);
+                expect(registeredTest.status).to.equal(API.STATUS.OK);
                 expect(registeredTest.description).to.equal(testName);
                 expect(registeredTest.test).to.equal(testFn);
             });
@@ -252,7 +252,7 @@ describe("API", () => {
 
                 const registeredTest = API.its[0];
                 expect(registeredTest).to.be.an.instanceof(API.It);
-                expect(registeredTest.type).to.equal(API.STATUS.SKIP);
+                expect(registeredTest.status).to.equal(API.STATUS.SKIP);
                 expect(registeredTest.description).to.equal(testName);
                 expect(registeredTest.test).to.equal(testFn);
             });
@@ -264,585 +264,156 @@ describe("API", () => {
 
                 const registeredTest = API.its[0];
                 expect(registeredTest).to.be.an.instanceof(API.It);
-                expect(registeredTest.type).to.equal(API.STATUS.ONLY);
+                expect(registeredTest.status).to.equal(API.STATUS.ONLY);
                 expect(registeredTest.description).to.equal(testName);
                 expect(registeredTest.test).to.equal(testFn);
             });
         });
     });
 
-    describe("Before", () => {
-        const hookName = "It's a hook";
+    ['Before', 'BeforeEach', 'AfterEach', 'After'].forEach(type => {
+        describe(type, () => {
+            const hookName = "It's a hook";
+            const method = type.charAt(0).toLowerCase() + type.substr(1);
 
-        it("should have mock for before method", () => {
-            expect(API.before).to.be.defined;
-        });
-
-        describe("usage", () => {
-            const hookFn = () => '';
-
-            it("should register mocked before hook with before", () => {
-                API.before(hookFn);
-
-                expect(API.hooks.length).to.equal(1);
-
-                const registeredHook = API.hooks[0];
-                expect(registeredHook).to.be.an.instanceof(API.Before);
-                expect(registeredHook.type).to.equal(API.STATUS.OK);
-                expect(registeredHook.description).to.equal('');
-                expect(registeredHook.test).to.equal(hookFn);
+            it(`should have mock for ${method} method`, () => {
+                expect(API[method]).to.be.defined;
             });
 
-            it("should register named mocked before hook with before", () => {
-                API.before(hookName, hookFn);
+            describe("usage", () => {
+                const hookFn = () => '';
 
-                expect(API.hooks.length).to.equal(1);
+                it(`should register mocked ${method} hook with ${method}`, () => {
+                    API[method](hookFn);
 
-                const registeredHook = API.hooks[0];
-                expect(registeredHook).to.be.an.instanceof(API.Before);
-                expect(registeredHook.type).to.equal(API.STATUS.OK);
-                expect(registeredHook.description).to.equal(hookName);
-                expect(registeredHook.test).to.equal(hookFn);
-            });
-        });
+                    expect(API.hooks.length).to.equal(1);
 
-        describe("running", () => {
-            const createHook = fn => new API.Before(API.STATUS.OK, hookName, fn);
+                    const registeredHook = API.hooks[0];
+                    expect(registeredHook).to.be.an.instanceof(API[type]);
+                    expect(registeredHook.status).to.equal(API.STATUS.OK);
+                    expect(registeredHook.description).to.equal('');
+                    expect(registeredHook.test).to.equal(hookFn);
+                });
 
-            it("should work with passed sync hooks", done => {
-                let called = false;
-                const hookFn = () => {
-                    called = true;
-                    return 1;
-                };
-                const hook = createHook(hookFn);
-                hook.execute().then(r => {
-                    expect(r).to.equal(1);
-                    expect(called).to.be.true;
-                }, fail).then(done, done);
-            });
+                it(`should register named mocked ${method} hook with ${method}`, () => {
+                    API[method](hookName, hookFn);
 
-            it("should work with failed sync hooks", done => {
-                let called = false;
-                const hookFn = () => {
-                    called = true;
-                    throw Error('e');
-                };
-                const hook = createHook(hookFn);
-                hook.execute().then(fail, e => {
-                    expect(e).to.be.an('error');
-                    expect(called).to.be.true;
-                }).then(done, done);
+                    expect(API.hooks.length).to.equal(1);
+
+                    const registeredHook = API.hooks[0];
+                    expect(registeredHook).to.be.an.instanceof(API[type]);
+                    expect(registeredHook.status).to.equal(API.STATUS.OK);
+                    expect(registeredHook.description).to.equal(hookName);
+                     expect(registeredHook.test).to.equal(hookFn);
+                });
             });
 
-            it("should work with passed async hooks with callbacks", done => {
-                let called = false;
-                const hookFn = (cb) => {
-                    setTimeout(function () {
+            describe("running", () => {
+                const createHook = fn => new API[type](hookName, fn);
+
+                it("should work with passed sync hooks", done => {
+                    let called = false;
+                    const hookFn = () => {
                         called = true;
-                        cb();
-                    }, 100);
-                };
-                const hook = createHook(hookFn);
-                hook.execute().then(r => {
-                    expect(r).to.be.undefined;
-                    expect(called).to.be.true;
-                }, fail).then(done, done);
-            });
+                        return 1;
+                    };
+                    const hook = createHook(hookFn);
+                    hook.execute().then(r => {
+                        expect(r).to.equal(1);
+                        expect(called).to.be.true;
+                    }, fail).then(done, done);
+                });
 
-            it("should work with passed async hooks with promise", done => {
-                let called = false;
-                const hookFn = () => {
-                    return new Promise(resolve => {
+                it("should work with failed sync hooks", done => {
+                    let called = false;
+                    const hookFn = () => {
+                        called = true;
+                        throw Error('e');
+                    };
+                    const hook = createHook(hookFn);
+                    hook.execute().then(fail, e => {
+                        expect(e).to.be.an('error');
+                        expect(called).to.be.true;
+                    }).then(done, done);
+                });
+
+                it("should work with passed async hooks with callbacks", done => {
+                    let called = false;
+                    const hookFn = (cb) => {
                         setTimeout(function () {
                             called = true;
-                            resolve();
+                            cb();
                         }, 100);
-                    });
-                };
-                const hook = createHook(hookFn);
-                hook.execute().then(r => {
-                    expect(r).to.be.undefined;
-                    expect(called).to.be.true;
-                }, fail).then(done, done);
-            });
+                    };
+                    const hook = createHook(hookFn);
+                    hook.execute().then(r => {
+                        expect(r).to.be.undefined;
+                        expect(called).to.be.true;
+                    }, fail).then(done, done);
+                });
 
-            it("should work with failed async hooks with callbacks", done => {
-                let called = false;
-                const hookFn = function (cb) {
-                    setTimeout(function () {
-                        called = true;
-                        cb('error');
-                    }, 100);
-                };
-                const hook = createHook(hookFn);
-                hook.execute().then(fail, e => {
-                    expect(e).to.equal('error');
-                    expect(called).to.be.true;
-                }).then(done, done);
-            });
+                it("should work with passed async hooks with promise", done => {
+                    let called = false;
+                    const hookFn = () => {
+                        return new Promise(resolve => {
+                            setTimeout(function () {
+                                called = true;
+                                resolve();
+                            }, 100);
+                        });
+                    };
+                    const hook = createHook(hookFn);
+                    hook.execute().then(r => {
+                        expect(r).to.be.undefined;
+                        expect(called).to.be.true;
+                    }, fail).then(done, done);
+                });
 
-            it("should work with failed async hooks with promises", done => {
-                let called = false;
-                const hookFn = function () {
-                    return new Promise((resolve, reject) => {
+                it("should work with failed async hooks with callbacks", done => {
+                    let called = false;
+                    const hookFn = function (cb) {
                         setTimeout(function () {
                             called = true;
-                            reject('error');
+                            cb('error');
                         }, 100);
-                    });
-                };
-                const hook = createHook(hookFn);
-                hook.execute().then(fail, e => {
-                    expect(e).to.equal('error');
-                    expect(called).to.be.true;
-                }).then(done, done);
-            });
+                    };
+                    const hook = createHook(hookFn);
+                    hook.execute().then(fail, e => {
+                        expect(e).to.equal('error');
+                        expect(called).to.be.true;
+                    }).then(done, done);
+                });
+    
+                it("should work with failed async hooks with promises", done => {
+                    let called = false;
+                    const hookFn = function () {
+                        return new Promise((resolve, reject) => {
+                            setTimeout(function () {
+                                called = true;
+                                reject('error');
+                            }, 100);
+                        });
+                    };
+                    const hook = createHook(hookFn);
+                    hook.execute().then(fail, e => {
+                        expect(e).to.equal('error');
+                        expect(called).to.be.true;
+                    }).then(done, done);
+                });
 
-            it("should support of skipping normal function hooks", done => {
-                let called = false;
-                const hookFn = function () {
-                    called = true;
-                    this.skip();
-                };
-                const hook = createHook(hookFn);
-                hook.execute().then(r => {
-                    expect(r).to.be.undefined;
-                    expect(called).to.be.true;
-                    expect(hook.type).to.equal(API.STATUS.SKIP);
-                }, fail).then(done, done);
-            });
-        });
-    });
-
-    describe("BeforeEach", () => {
-        const hookName = "It's a hook";
-
-        it("should have mock for beforeEach method", () => {
-            expect(API.beforeEach).to.be.defined;
-        });
-
-        describe("usage", () => {
-            const hookFn = () => '';
-
-            it("should register mocked before hook with beforeEach", () => {
-                API.beforeEach(hookFn);
-
-                expect(API.hooks.length).to.equal(1);
-
-                const registeredHook = API.hooks[0];
-                expect(registeredHook).to.be.an.instanceof(API.BeforeEach);
-                expect(registeredHook.type).to.equal(API.STATUS.OK);
-                expect(registeredHook.description).to.equal('');
-                expect(registeredHook.test).to.equal(hookFn);
-            });
-
-            it("should register named mocked before hook with beforeEach", () => {
-                API.beforeEach(hookName, hookFn);
-
-                expect(API.hooks.length).to.equal(1);
-
-                const registeredHook = API.hooks[0];
-                expect(registeredHook).to.be.an.instanceof(API.BeforeEach);
-                expect(registeredHook.type).to.equal(API.STATUS.OK);
-                expect(registeredHook.description).to.equal(hookName);
-                expect(registeredHook.test).to.equal(hookFn);
-            });
-        });
-
-        describe("running", () => {
-            const createHook = fn => new API.BeforeEach(API.STATUS.OK, hookName, fn);
-
-            it("should work with passed sync hooks", done => {
-                let called = false;
-                const hookFn = () => {
-                    called = true;
-                    return 1;
-                };
-                const hook = createHook(hookFn);
-                hook.execute().then(r => {
-                    expect(r).to.equal(1);
-                    expect(called).to.be.true;
-                }, fail).then(done, done);
-            });
-
-            it("should work with failed sync hooks", done => {
-                let called = false;
-                const hookFn = () => {
-                    called = true;
-                    throw Error('e');
-                };
-                const hook = createHook(hookFn);
-                hook.execute().then(fail, e => {
-                    expect(e).to.be.an('error');
-                    expect(called).to.be.true;
-                }).then(done, done);
-            });
-
-            it("should work with passed async hooks with callbacks", done => {
-                let called = false;
-                const hookFn = (cb) => {
-                    setTimeout(function () {
+                it("should support of skipping normal function hooks", done => {
+                    let called = false;
+                    const hookFn = function () {
                         called = true;
-                        cb();
-                    }, 100);
-                };
-                const hook = createHook(hookFn);
-                hook.execute().then(r => {
-                    expect(r).to.be.undefined;
-                    expect(called).to.be.true;
-                }, fail).then(done, done);
-            });
-
-            it("should work with passed async hooks with promise", done => {
-                let called = false;
-                const hookFn = () => {
-                    return new Promise(resolve => {
-                        setTimeout(function () {
-                            called = true;
-                            resolve();
-                        }, 100);
-                    });
-                };
-                const hook = createHook(hookFn);
-                hook.execute().then(r => {
-                    expect(r).to.be.undefined;
-                    expect(called).to.be.true;
-                }, fail).then(done, done);
-            });
-
-            it("should work with failed async hooks with callbacks", done => {
-                let called = false;
-                const hookFn = function (cb) {
-                    setTimeout(function () {
-                        called = true;
-                        cb('error');
-                    }, 100);
-                };
-                const hook = createHook(hookFn);
-                hook.execute().then(fail, e => {
-                    expect(e).to.equal('error');
-                    expect(called).to.be.true;
-                }).then(done, done);
-            });
-
-            it("should work with failed async hooks with promises", done => {
-                let called = false;
-                const hookFn = function () {
-                    return new Promise((resolve, reject) => {
-                        setTimeout(function () {
-                            called = true;
-                            reject('error');
-                        }, 100);
-                    });
-                };
-                const hook = createHook(hookFn);
-                hook.execute().then(fail, e => {
-                    expect(e).to.equal('error');
-                    expect(called).to.be.true;
-                }).then(done, done);
-            });
-
-            it("should support of skipping normal function hooks", done => {
-                let called = false;
-                const hookFn = function () {
-                    called = true;
-                    this.skip();
-                };
-                const hook = createHook(hookFn);
-                hook.execute().then(r => {
-                    expect(r).to.be.undefined;
-                    expect(called).to.be.true;
-                    expect(hook.type).to.equal(API.STATUS.SKIP);
-                }, fail).then(done, done);
-            });
-        });
-    });
-
-    describe("AfterEach", () => {
-        const hookName = "It's a hook";
-
-        it("should have mock for afterEach method", () => {
-            expect(API.afterEach).to.be.defined;
-        });
-
-        describe("usage", () => {
-            const hookFn = () => '';
-
-            it("should register mocked before hook with afterEach", () => {
-                API.afterEach(hookFn);
-
-                expect(API.hooks.length).to.equal(1);
-
-                const registeredHook = API.hooks[0];
-                expect(registeredHook).to.be.an.instanceof(API.AfterEach);
-                expect(registeredHook.type).to.equal(API.STATUS.OK);
-                expect(registeredHook.description).to.equal('');
-                expect(registeredHook.test).to.equal(hookFn);
-            });
-
-            it("should register named mocked before hook with afterEach", () => {
-                API.afterEach(hookName, hookFn);
-
-                expect(API.hooks.length).to.equal(1);
-
-                const registeredHook = API.hooks[0];
-                expect(registeredHook).to.be.an.instanceof(API.AfterEach);
-                expect(registeredHook.type).to.equal(API.STATUS.OK);
-                expect(registeredHook.description).to.equal(hookName);
-                expect(registeredHook.test).to.equal(hookFn);
-            });
-        });
-
-        describe("running", () => {
-            const createHook = fn => new API.AfterEach(API.STATUS.OK, hookName, fn);
-
-            it("should work with passed sync hooks", done => {
-                let called = false;
-                const hookFn = () => {
-                    called = true;
-                    return 1;
-                };
-                const hook = createHook(hookFn);
-                hook.execute().then(r => {
-                    expect(r).to.equal(1);
-                    expect(called).to.be.true;
-                }, fail).then(done, done);
-            });
-
-            it("should work with failed sync hooks", done => {
-                let called = false;
-                const hookFn = () => {
-                    called = true;
-                    throw Error('e');
-                };
-                const hook = createHook(hookFn);
-                hook.execute().then(fail, e => {
-                    expect(e).to.be.an('error');
-                    expect(called).to.be.true;
-                }).then(done, done);
-            });
-
-            it("should work with passed async hooks with callbacks", done => {
-                let called = false;
-                const hookFn = (cb) => {
-                    setTimeout(function () {
-                        called = true;
-                        cb();
-                    }, 100);
-                };
-                const hook = createHook(hookFn);
-                hook.execute().then(r => {
-                    expect(r).to.be.undefined;
-                    expect(called).to.be.true;
-                }, fail).then(done, done);
-            });
-
-            it("should work with passed async hooks with promise", done => {
-                let called = false;
-                const hookFn = () => {
-                    return new Promise(resolve => {
-                        setTimeout(function () {
-                            called = true;
-                            resolve();
-                        }, 100);
-                    });
-                };
-                const hook = createHook(hookFn);
-                hook.execute().then(r => {
-                    expect(r).to.be.undefined;
-                    expect(called).to.be.true;
-                }, fail).then(done, done);
-            });
-
-            it("should work with failed async hooks with callbacks", done => {
-                let called = false;
-                const hookFn = function (cb) {
-                    setTimeout(function () {
-                        called = true;
-                        cb('error');
-                    }, 100);
-                };
-                const hook = createHook(hookFn);
-                hook.execute().then(fail, e => {
-                    expect(e).to.equal('error');
-                    expect(called).to.be.true;
-                }).then(done, done);
-            });
-
-            it("should work with failed async hooks with promises", done => {
-                let called = false;
-                const hookFn = function () {
-                    return new Promise((resolve, reject) => {
-                        setTimeout(function () {
-                            called = true;
-                            reject('error');
-                        }, 100);
-                    });
-                };
-                const hook = createHook(hookFn);
-                hook.execute().then(fail, e => {
-                    expect(e).to.equal('error');
-                    expect(called).to.be.true;
-                }).then(done, done);
-            });
-
-            it("should support of skipping normal function hooks", done => {
-                let called = false;
-                const hookFn = function () {
-                    called = true;
-                    this.skip();
-                };
-                const hook = createHook(hookFn);
-                hook.execute().then(r => {
-                    expect(r).to.be.undefined;
-                    expect(called).to.be.true;
-                    expect(hook.type).to.equal(API.STATUS.SKIP);
-                }, fail).then(done, done);
-            });
-        });
-    });
-
-    describe("After", () => {
-        const hookName = "It's a hook";
-
-        it("should have mock for after method", () => {
-            expect(API.after).to.be.defined;
-        });
-
-        describe("usage", () => {
-            const hookFn = () => '';
-
-            it("should register mocked before hook with after", () => {
-                API.after(hookFn);
-
-                expect(API.hooks.length).to.equal(1);
-
-                const registeredHook = API.hooks[0];
-                expect(registeredHook).to.be.an.instanceof(API.After);
-                expect(registeredHook.type).to.equal(API.STATUS.OK);
-                expect(registeredHook.description).to.equal('');
-                expect(registeredHook.test).to.equal(hookFn);
-            });
-
-            it("should register named mocked before hook with after", () => {
-                API.after(hookName, hookFn);
-
-                expect(API.hooks.length).to.equal(1);
-
-                const registeredHook = API.hooks[0];
-                expect(registeredHook).to.be.an.instanceof(API.After);
-                expect(registeredHook.type).to.equal(API.STATUS.OK);
-                expect(registeredHook.description).to.equal(hookName);
-                expect(registeredHook.test).to.equal(hookFn);
-            });
-        });
-
-        describe("running", () => {
-            const createHook = fn => new API.After(API.STATUS.OK, hookName, fn);
-
-            it("should work with passed sync hooks", done => {
-                let called = false;
-                const hookFn = () => {
-                    called = true;
-                    return 1;
-                };
-                const hook = createHook(hookFn);
-                hook.execute().then(r => {
-                    expect(r).to.equal(1);
-                    expect(called).to.be.true;
-                }, fail).then(done, done);
-            });
-
-            it("should work with failed sync hooks", done => {
-                let called = false;
-                const hookFn = () => {
-                    called = true;
-                    throw Error('e');
-                };
-                const hook = createHook(hookFn);
-                hook.execute().then(fail, e => {
-                    expect(e).to.be.an('error');
-                    expect(called).to.be.true;
-                }).then(done, done);
-            });
-
-            it("should work with passed async hooks with callbacks", done => {
-                let called = false;
-                const hookFn = (cb) => {
-                    setTimeout(function () {
-                        called = true;
-                        cb();
-                    }, 100);
-                };
-                const hook = createHook(hookFn);
-                hook.execute().then(r => {
-                    expect(r).to.be.undefined;
-                    expect(called).to.be.true;
-                }, fail).then(done, done);
-            });
-
-            it("should work with passed async hooks with promise", done => {
-                let called = false;
-                const hookFn = () => {
-                    return new Promise(resolve => {
-                        setTimeout(function () {
-                            called = true;
-                            resolve();
-                        }, 100);
-                    });
-                };
-                const hook = createHook(hookFn);
-                hook.execute().then(r => {
-                    expect(r).to.be.undefined;
-                    expect(called).to.be.true;
-                }, fail).then(done, done);
-            });
-
-            it("should work with failed async hooks with callbacks", done => {
-                let called = false;
-                const hookFn = function (cb) {
-                    setTimeout(function () {
-                        called = true;
-                        cb('error');
-                    }, 100);
-                };
-                const hook = createHook(hookFn);
-                hook.execute().then(fail, e => {
-                    expect(e).to.equal('error');
-                    expect(called).to.be.true;
-                }).then(done, done);
-            });
-
-            it("should work with failed async hooks with promises", done => {
-                let called = false;
-                const hookFn = function () {
-                    return new Promise((resolve, reject) => {
-                        setTimeout(function () {
-                            called = true;
-                            reject('error');
-                        }, 100);
-                    });
-                };
-                const hook = createHook(hookFn);
-                hook.execute().then(fail, e => {
-                    expect(e).to.equal('error');
-                    expect(called).to.be.true;
-                }).then(done, done);
-            });
-
-            it("should support of skipping normal function hooks", done => {
-                let called = false;
-                const hookFn = function () {
-                    called = true;
-                    this.skip();
-                };
-                const hook = createHook(hookFn);
-                hook.execute().then(r => {
-                    expect(r).to.be.undefined;
-                    expect(called).to.be.true;
-                    expect(hook.type).to.equal(API.STATUS.SKIP);
-                }, fail).then(done, done);
+                        this.skip();
+                    };
+                    const hook = createHook(hookFn);
+                    hook.execute().then(r => {
+                        expect(r).to.be.undefined;
+                        expect(called).to.be.true;
+                        expect(hook.status).to.equal(API.STATUS.SKIP);
+                    }, fail).then(done, done);
+                });
             });
         });
     });

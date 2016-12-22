@@ -139,7 +139,7 @@ For tips about **How to test you tests** you could check [how-to.spec.js](/test/
   **Properties**:
     - `description {String}`
     - `test {Function}`
-    - `type {STATUS|Number}`
+    - `status {STATUS|Number}`
 
   **Methods**:
     - `execute() : void` - executes `test`, which is a **sync** function
@@ -149,7 +149,7 @@ For tips about **How to test you tests** you could check [how-to.spec.js](/test/
   **Properties**:
     - `description {String}`
     - `test {Function}`
-    - `type{STATUS|Number}`
+    - `status {STATUS|Number}`
 
   **Methods**:
     - `execute() : Promise` - executes `test`, which could be both **sync** and **async**
@@ -159,7 +159,7 @@ For tips about **How to test you tests** you could check [how-to.spec.js](/test/
   **Properties**:
     - `description {String}`
     - `test {Function}`
-    - `type{STATUS|Number}`
+    - `status {STATUS|Number}`
 
   **Methods**:
     - `execute() : Promise` - executes `test`, which could be both **sync** and **async**
@@ -170,16 +170,16 @@ For tips about **How to test you tests** you could check [how-to.spec.js](/test/
 
 The mocked mocha methods are:
 
-| Mock method                         | Action when called                                   |
-|:------------------------------------|:-----------------------------------------------------|
-| `describe(description, suite)`      | Adds new `Describe` to `describes` with `OK` type.   |
-| `describe.skip(description, suite)` | Adds new `Describe` to `describes` with `SKIP` type. |
-| `describe.only(description, suite)` | Adds new `Describe` to `describes` with `ONLY` type. |
-| `it(description, test)`             | Adds new `It` to `its` with `OK` type.               |
-| `it.skip(description, test)`        | Adds new `It` to `its` with `SKIP` type.             |
-| `it.only(description, test)`        | Adds new `It` to `its` with `ONLY` type.             |
-| `before([description,] hook)`       | Adds new `Before` to `hooks` wth `OK` type.          |
-| `beforeEach([description,] hook)`   | Adds new `BeforeEach` to `hooks` with `OK` type.     |
-| `afterEach([description,] hook)`    | Adds new `AfterEach` to `hooks` with `OK` type.      |
-| `after([description,] hook)`        | Adds new `After` to `hooks` with `OK` type.          |
-| `run()`                             | Sets `delayed` to `true`.                            |
+| Mock method                         | Action when called                                     |
+|:------------------------------------|:-------------------------------------------------------|
+| `describe(description, suite)`      | Adds new `Describe` to `describes` with `OK` status.   |
+| `describe.skip(description, suite)` | Adds new `Describe` to `describes` with `SKIP` status. |
+| `describe.only(description, suite)` | Adds new `Describe` to `describes` with `ONLY` status. |
+| `it(description, test)`             | Adds new `It` to `its` with `OK` status.               |
+| `it.skip(description, test)`        | Adds new `It` to `its` with `SKIP` status.             |
+| `it.only(description, test)`        | Adds new `It` to `its` with `ONLY` status.             |
+| `before([description,] hook)`       | Adds new `Before` to `hooks` wth `OK` status.          |
+| `beforeEach([description,] hook)`   | Adds new `BeforeEach` to `hooks` with `OK` status.     |
+| `afterEach([description,] hook)`    | Adds new `AfterEach` to `hooks` with `OK` status.      |
+| `after([description,] hook)`        | Adds new `After` to `hooks` with `OK` status.          |
+| `run()`                             | Sets `delayed` to `true`.                              |
