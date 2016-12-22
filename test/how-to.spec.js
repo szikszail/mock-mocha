@@ -3,8 +3,6 @@
 const mocks = require('../lib/index.js');
 const expect = require('chai').expect;
 
-const fail = v => expect(v).to.be.undefined;
-
 describe("integration", () => {
     const moduleToRequire = require.resolve('./integration-test.js');
 
