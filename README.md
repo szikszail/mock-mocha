@@ -43,3 +43,11 @@ describe("testing my mocha tests", () => {
     });
 });
 ```
+
+## API
+
+### Properties
+
+- #### `describes`
+    
+  **Type**: `Array.<Describe>` - The registered test suites.
