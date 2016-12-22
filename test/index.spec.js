@@ -899,11 +899,14 @@ describe("API", () => {
     });
 
     describe("Require", () => {
-        it("should not use cache when requiring a module", () => {
+        it("should not use cache when requiring a module", done => {
             const firstDate = API.require(__dirname, './require-test.js');
-            const secondDate = API.require(__dirname, './require-test.js');
 
-            expect(firstDate).to.not.equal(secondDate);
+            setTimeout(() => {
+                const secondDate = API.require(__dirname, './require-test.js');
+                expect(firstDate).to.not.equal(secondDate);
+                done();
+            }, 100);
         });
     });
 });
