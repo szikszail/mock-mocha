@@ -111,7 +111,7 @@ describe("testing my mocha tests", () => {
 
   **Returns**: `{Object.<String, Function>}`
 
-- #### `restoreMochaGlobals([globalScope], [stored])`
+- `restoreMochaGlobals([globalScope], [stored])`
 
   Restores the previously saved (or given) Mocha global methods to `GLOBAL` or to the given object and returns the new scope.
 
@@ -121,7 +121,7 @@ describe("testing my mocha tests", () => {
 
   **Returns**: `{Object}`
 
-- #### `setGlobals([globalScope])`
+- `setGlobals([globalScope])`
 
   Decorates `GLOBAL` or the given object with the mock Mocha global methods.
 
@@ -132,7 +132,7 @@ describe("testing my mocha tests", () => {
 
 ### Types
 
-#### `Describe` - test suite
+- `Describe` - test suite
   
   **Properties**:
     - `description {String}`
@@ -142,7 +142,7 @@ describe("testing my mocha tests", () => {
   **Methods**:
     - `execute() : void` - executes `test`, which is a **sync** function
 
-#### `It` - test
+- `It` - test
 
   **Properties**:
     - `description {String}`
@@ -152,7 +152,7 @@ describe("testing my mocha tests", () => {
   **Methods**:
     - `execute() : Promise` - executes `test`, which could be both **sync** and **async**
 
-#### `Before`, `BeforeEach`, `AfterEach`, `After` - hooks
+- `Before`, `BeforeEach`, `AfterEach`, `After` - hooks
 
   **Properties**:
     - `description {String}`
