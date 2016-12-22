@@ -31,7 +31,7 @@ describe("API", () => {
         it("should have mock of describe method", () => {
             expect(API.describe).to.be.defined;
         });
-        
+
         it("should have mock of describe.only method", () => {
             expect(API.describe.only).to.be.defined;
         });
@@ -42,10 +42,12 @@ describe("API", () => {
 
         describe("running", () => {
             const createSuite = fn => new API.Describe(API.STATUS.OK, suiteName, fn);
-       
-            it("should have method to execute defined suite", () => {           
+
+            it("should have method to execute defined suite", () => {
                 let called = false;
-                const test = () => { called = true; };
+                const test = () => {
+                    called = true;
+                };
                 const suite = createSuite(test);
                 suite.execute();
                 expect(called).to.be.true;
@@ -63,8 +65,8 @@ describe("API", () => {
                 expect(suite.type).to.equal(API.STATUS.SKIP);
             });
         });
-    
-        describe("usage", () =>  {
+
+        describe("usage", () => {
             const testSuite = () => '';
 
             it("should register mocked test suite with describe", () => {
@@ -81,7 +83,7 @@ describe("API", () => {
 
             it("should register mocked test suite with describe.skip", () => {
                 API.describe.skip(suiteName, testSuite);
-        
+
                 expect(API.describes.length).to.equal(1);
 
                 const registeredSuite = API.describes[0];
@@ -93,7 +95,7 @@ describe("API", () => {
 
             it("should register mocked test suite with describe.only", () => {
                 API.describe.only(suiteName, testSuite);
-        
+
                 expect(API.describes.length).to.equal(1);
 
                 const registeredSuite = API.describes[0];
@@ -111,7 +113,7 @@ describe("API", () => {
         it("should have mock of it method", () => {
             expect(API.it).to.be.defined;
         });
-        
+
         it("should have mock of it.only method", () => {
             expect(API.it.only).to.be.defined;
         });
@@ -122,8 +124,8 @@ describe("API", () => {
 
         describe("running", () => {
             const createTest = fn => new API.It(API.STATUS.OK, testName, fn);
-       
-            it("should work with passed sync tests", done => {           
+
+            it("should work with passed sync tests", done => {
                 let called = false;
                 const testFn = () => {
                     called = true;
@@ -136,7 +138,7 @@ describe("API", () => {
                 }, fail).then(done, done);
             });
 
-            it("should work with failed sync tests", done => {           
+            it("should work with failed sync tests", done => {
                 let called = false;
                 const testFn = () => {
                     called = true;
@@ -171,7 +173,7 @@ describe("API", () => {
                         setTimeout(function () {
                             called = true;
                             resolve();
-                         }, 100);
+                        }, 100);
                     });
                 };
                 const test = createTest(testFn);
@@ -213,7 +215,7 @@ describe("API", () => {
                 }).then(done, done);
             });
 
-            it("should support of skipping normal function tests", done => {           
+            it("should support of skipping normal function tests", done => {
                 let called = false;
                 const testFn = function () {
                     called = true;
@@ -227,13 +229,13 @@ describe("API", () => {
                 }, fail).then(done, done);
             });
         });
-    
-        describe("usage", () =>  {
+
+        describe("usage", () => {
             const testFn = () => '';
 
             it("should register mocked test with it", () => {
                 API.it(testName, testFn);
-        
+
                 expect(API.its.length).to.equal(1);
 
                 const registeredTest = API.its[0];
@@ -245,7 +247,7 @@ describe("API", () => {
 
             it("should register mocked test with it.skip", () => {
                 API.it.skip(testName, testFn);
-        
+
                 expect(API.its.length).to.equal(1);
 
                 const registeredTest = API.its[0];
@@ -257,7 +259,7 @@ describe("API", () => {
 
             it("should register mocked test with it.only", () => {
                 API.it.only(testName, testFn);
-        
+
                 expect(API.its.length).to.equal(1);
 
                 const registeredTest = API.its[0];
@@ -276,12 +278,12 @@ describe("API", () => {
             expect(API.before).to.be.defined;
         });
 
-        describe("usage", () =>  {
+        describe("usage", () => {
             const hookFn = () => '';
 
             it("should register mocked before hook with before", () => {
                 API.before(hookFn);
-        
+
                 expect(API.hooks.length).to.equal(1);
 
                 const registeredHook = API.hooks[0];
@@ -293,7 +295,7 @@ describe("API", () => {
 
             it("should register named mocked before hook with before", () => {
                 API.before(hookName, hookFn);
-        
+
                 expect(API.hooks.length).to.equal(1);
 
                 const registeredHook = API.hooks[0];
@@ -302,12 +304,12 @@ describe("API", () => {
                 expect(registeredHook.description).to.equal(hookName);
                 expect(registeredHook.test).to.equal(hookFn);
             });
-        });    
+        });
 
         describe("running", () => {
             const createHook = fn => new API.Before(API.STATUS.OK, hookName, fn);
-       
-            it("should work with passed sync hooks", done => {           
+
+            it("should work with passed sync hooks", done => {
                 let called = false;
                 const hookFn = () => {
                     called = true;
@@ -320,7 +322,7 @@ describe("API", () => {
                 }, fail).then(done, done);
             });
 
-            it("should work with failed sync hooks", done => {           
+            it("should work with failed sync hooks", done => {
                 let called = false;
                 const hookFn = () => {
                     called = true;
@@ -355,7 +357,7 @@ describe("API", () => {
                         setTimeout(function () {
                             called = true;
                             resolve();
-                         }, 100);
+                        }, 100);
                     });
                 };
                 const hook = createHook(hookFn);
@@ -397,7 +399,7 @@ describe("API", () => {
                 }).then(done, done);
             });
 
-            it("should support of skipping normal function hooks", done => {           
+            it("should support of skipping normal function hooks", done => {
                 let called = false;
                 const hookFn = function () {
                     called = true;
@@ -420,12 +422,12 @@ describe("API", () => {
             expect(API.beforeEach).to.be.defined;
         });
 
-        describe("usage", () =>  {
+        describe("usage", () => {
             const hookFn = () => '';
 
             it("should register mocked before hook with beforeEach", () => {
                 API.beforeEach(hookFn);
-        
+
                 expect(API.hooks.length).to.equal(1);
 
                 const registeredHook = API.hooks[0];
@@ -437,7 +439,7 @@ describe("API", () => {
 
             it("should register named mocked before hook with beforeEach", () => {
                 API.beforeEach(hookName, hookFn);
-        
+
                 expect(API.hooks.length).to.equal(1);
 
                 const registeredHook = API.hooks[0];
@@ -446,12 +448,12 @@ describe("API", () => {
                 expect(registeredHook.description).to.equal(hookName);
                 expect(registeredHook.test).to.equal(hookFn);
             });
-        });    
+        });
 
         describe("running", () => {
             const createHook = fn => new API.BeforeEach(API.STATUS.OK, hookName, fn);
-       
-            it("should work with passed sync hooks", done => {           
+
+            it("should work with passed sync hooks", done => {
                 let called = false;
                 const hookFn = () => {
                     called = true;
@@ -464,7 +466,7 @@ describe("API", () => {
                 }, fail).then(done, done);
             });
 
-            it("should work with failed sync hooks", done => {           
+            it("should work with failed sync hooks", done => {
                 let called = false;
                 const hookFn = () => {
                     called = true;
@@ -499,7 +501,7 @@ describe("API", () => {
                         setTimeout(function () {
                             called = true;
                             resolve();
-                         }, 100);
+                        }, 100);
                     });
                 };
                 const hook = createHook(hookFn);
@@ -541,7 +543,7 @@ describe("API", () => {
                 }).then(done, done);
             });
 
-            it("should support of skipping normal function hooks", done => {           
+            it("should support of skipping normal function hooks", done => {
                 let called = false;
                 const hookFn = function () {
                     called = true;
@@ -564,12 +566,12 @@ describe("API", () => {
             expect(API.afterEach).to.be.defined;
         });
 
-        describe("usage", () =>  {
+        describe("usage", () => {
             const hookFn = () => '';
 
             it("should register mocked before hook with afterEach", () => {
                 API.afterEach(hookFn);
-        
+
                 expect(API.hooks.length).to.equal(1);
 
                 const registeredHook = API.hooks[0];
@@ -581,7 +583,7 @@ describe("API", () => {
 
             it("should register named mocked before hook with afterEach", () => {
                 API.afterEach(hookName, hookFn);
-        
+
                 expect(API.hooks.length).to.equal(1);
 
                 const registeredHook = API.hooks[0];
@@ -590,12 +592,12 @@ describe("API", () => {
                 expect(registeredHook.description).to.equal(hookName);
                 expect(registeredHook.test).to.equal(hookFn);
             });
-        });    
+        });
 
         describe("running", () => {
             const createHook = fn => new API.AfterEach(API.STATUS.OK, hookName, fn);
-       
-            it("should work with passed sync hooks", done => {           
+
+            it("should work with passed sync hooks", done => {
                 let called = false;
                 const hookFn = () => {
                     called = true;
@@ -608,7 +610,7 @@ describe("API", () => {
                 }, fail).then(done, done);
             });
 
-            it("should work with failed sync hooks", done => {           
+            it("should work with failed sync hooks", done => {
                 let called = false;
                 const hookFn = () => {
                     called = true;
@@ -643,7 +645,7 @@ describe("API", () => {
                         setTimeout(function () {
                             called = true;
                             resolve();
-                         }, 100);
+                        }, 100);
                     });
                 };
                 const hook = createHook(hookFn);
@@ -685,7 +687,7 @@ describe("API", () => {
                 }).then(done, done);
             });
 
-            it("should support of skipping normal function hooks", done => {           
+            it("should support of skipping normal function hooks", done => {
                 let called = false;
                 const hookFn = function () {
                     called = true;
@@ -708,12 +710,12 @@ describe("API", () => {
             expect(API.after).to.be.defined;
         });
 
-        describe("usage", () =>  {
+        describe("usage", () => {
             const hookFn = () => '';
 
             it("should register mocked before hook with after", () => {
                 API.after(hookFn);
-        
+
                 expect(API.hooks.length).to.equal(1);
 
                 const registeredHook = API.hooks[0];
@@ -725,7 +727,7 @@ describe("API", () => {
 
             it("should register named mocked before hook with after", () => {
                 API.after(hookName, hookFn);
-        
+
                 expect(API.hooks.length).to.equal(1);
 
                 const registeredHook = API.hooks[0];
@@ -734,12 +736,12 @@ describe("API", () => {
                 expect(registeredHook.description).to.equal(hookName);
                 expect(registeredHook.test).to.equal(hookFn);
             });
-        });    
+        });
 
         describe("running", () => {
             const createHook = fn => new API.After(API.STATUS.OK, hookName, fn);
-       
-            it("should work with passed sync hooks", done => {           
+
+            it("should work with passed sync hooks", done => {
                 let called = false;
                 const hookFn = () => {
                     called = true;
@@ -752,7 +754,7 @@ describe("API", () => {
                 }, fail).then(done, done);
             });
 
-            it("should work with failed sync hooks", done => {           
+            it("should work with failed sync hooks", done => {
                 let called = false;
                 const hookFn = () => {
                     called = true;
@@ -787,7 +789,7 @@ describe("API", () => {
                         setTimeout(function () {
                             called = true;
                             resolve();
-                         }, 100);
+                        }, 100);
                     });
                 };
                 const hook = createHook(hookFn);
@@ -829,7 +831,7 @@ describe("API", () => {
                 }).then(done, done);
             });
 
-            it("should support of skipping normal function hooks", done => {           
+            it("should support of skipping normal function hooks", done => {
                 let called = false;
                 const hookFn = function () {
                     called = true;

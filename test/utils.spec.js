@@ -5,8 +5,9 @@ const utils = require('../lib/utils.js');
 
 describe("utilities", () => {
     describe("hasCallback", () => {
-        it("should identify sync function", () =>  {
-            expect(utils.hasCallback(function(){})).to.be.false;
+        it("should identify sync function", () => {
+            expect(utils.hasCallback(function () {
+            })).to.be.false;
         });
 
         it("should identify multi-line sync function", () => {
@@ -16,7 +17,8 @@ describe("utilities", () => {
         });
 
         it("should identify async function", () => {
-            expect(utils.hasCallback(function(cb){})).to.be.true;
+            expect(utils.hasCallback(function (cb) {
+            })).to.be.true;
         });
 
         it("should identify sync arrow function", () => {
