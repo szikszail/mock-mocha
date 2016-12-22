@@ -145,5 +145,5 @@ The mocked mocha methods are:
 | `before([description,] hook)`       | Adds new `Before` to `hooks` wth `OK` type.          |
 | `beforeEach([description,] hook)`   | Adds new `BeforeEach` to `hooks` with `OK` type.     |
 | `afterEach([description,] hook)`    | Adds new `AfterEach` to `hooks` with `OK` type.      |
-| `after([description,] hook)``       | Adds new `After` to `hooks` with `OK` type.          |
+| `after([description,] hook)`        | Adds new `After` to `hooks` with `OK` type.          |
 | `run()`                             | Sets `delayed` to `true`.                            |
