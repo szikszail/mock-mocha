@@ -78,6 +78,14 @@ describe("testing my mocha tests", () => {
 
   **Type**: `Object.<String, Function>`
 
+- #### `STATUS`
+
+  Possible statuses of `Describe`, `It` and `Hook` types.
+
+  Values: `OK`, `SKIP`, `ONLY`
+
+  **Type**: `Object.<String, Number>`
+
 ### Methods
 
 - #### `clear()`
@@ -91,3 +99,51 @@ describe("testing my mocha tests", () => {
   **Params**:
     - `root {String}` - the root of the current file, usually `__dirname`
     - `pathOfFile {String}` - the relative path to the file needs to be tested, relative to the curent test spec file
+
+  **Retuns**: `{*}`
+
+- #### `saveMochaGlobals([globalScope])`
+
+  Saves the global methods of Mocha to `storedMochaGlobals` from `GLOBAL` or the given object and returns those.
+
+  **Params**:
+    - `globalScope {Object} - the global scope, from the methods needs to be saved. Optional, by default it's NodeJS's `GLOBAL`
+
+  **Returns**: `{Object.<String, Function>}`
+
+- #### `restoreMochaGlobals([globalScope], [stored])`
+
+  Restores the previously saved (or given) Mocha global methods to `GLOBAL` or to the given object and returns the new scope.
+
+  **Params**:
+    - `globalScope {Object}` - the global scope, to the methods needs to be restored. Optional, by default it's NodeJS's `GLOBAL`
+    - `stored {Object}` - the object, where the original methods are stored. Optional, by default it's `storedMochaGlobals`
+
+  **Returns**: `{Object}`
+
+- #### `setGlobals([globalScope])`
+
+  Decorates `GLOBAL` or the given object with the mock Mocha global methods.
+
+  **Params**:
+    - `globalScope {Object}` - the global scope, which needs to be decorated with mocks. Optional, by default it's NodeJS's `GLOBAL`
+
+  **Returns**: `{Object}`
+
+### Mock Mocha methods
+
+The mocked mocha methods are:
+
+| Mock method                         | Action when called                                   |
+|:------------------------------------|:-----------------------------------------------------|
+| `describe(description, suite)`      | Adds new `Describe` to `describes` with `OK` type.   |
+| `describe.skip(description, suite)` | Adds new `Describe` to `describes` with `SKIP` type. |
+| `describe.only(description, suite)` | Adds new `Describe` to `describes` with `ONLY` type. |
+| `it(description, test)`             | Adds new `It` to `its` with `OK` type.               |
+| `it.skip(description, test)`        | Adds new `It` to `its` with `SKIP` type.             |
+| `it.only(description, test)`        | Adds new `It` to `its` with `ONLY` type.             |
+| `before([description,] hook)`       | Adds new `Before` to `hooks` wth `OK` type.          |
+| `beforeEach([description,] hook)`   | Adds new `BeforeEach` to `hooks` with `OK` type.     |
+| `afterEach([description,] hook)`    | Adds new `AfterEach` to `hooks` with `OK` type.      |
+| `after([description,] hook)``       | Adds new `After` to `hooks` with `OK` type.          |
+| `run()`                             | Sets `delayed` to `true`.                            |
