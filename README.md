@@ -49,5 +49,45 @@ describe("testing my mocha tests", () => {
 ### Properties
 
 - #### `describes`
+
+  The registered test suites, in order of the execution of test suites.
     
-  **Type**: `Array.<Describe>` - The registered test suites.
+  **Type**: `Array.<Describe>`
+
+- #### `its`
+
+  The registered tests, in order of the execution of tests.
+
+  **Type**: `Array.<It>`
+
+- #### `hooks`
+
+  The registered hooks, in order of the registration of hooks.
+
+  **Type**: `Array.<Before|BeforeEach|AfterEach|After>`
+
+- #### `delayed`
+
+  Indicates whether Mocha's run has been used.
+
+  **Type**: `Boolean`
+
+- #### `storedMochaGlobals`
+
+  All previously stored original Mocha global methods, like `describe`, `it`, etc.
+
+  **Type**: `Object.<String, Function>`
+
+### Methods
+
+- #### `clear()`
+
+  Sets all status properties (`describes`, `its`, `hooks` and `delayed`) to its default value.
+
+- #### `require(root, pathOfFile)`
+
+  Requires the given file (based on the given root, usually `__dirname`) with `require`, but without its default caching.
+
+  **Params**:
+    - `root {String}` - the root of the current file, usually `__dirname`
+    - `pathOfFile {String}` - the relative path to the file needs to be tested, relative to the curent test spec file
