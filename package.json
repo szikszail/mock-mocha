@@ -1,6 +1,6 @@
 {
   "name": "mock-mocha",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "To mock mocha in your test when you test your mocha tests",
   "main": "lib/index.js",
   "scripts": {

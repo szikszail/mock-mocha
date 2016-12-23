@@ -304,7 +304,7 @@ describe("API", () => {
                     expect(registeredHook).to.be.an.instanceof(API[type]);
                     expect(registeredHook.status).to.equal(API.STATUS.OK);
                     expect(registeredHook.description).to.equal(hookName);
-                     expect(registeredHook.test).to.equal(hookFn);
+                    expect(registeredHook.test).to.equal(hookFn);
                 });
             });
 
@@ -383,7 +383,7 @@ describe("API", () => {
                         expect(called).to.be.true;
                     }).then(done, done);
                 });
-    
+
                 it("should work with failed async hooks with promises", done => {
                     let called = false;
                     const hookFn = function () {
